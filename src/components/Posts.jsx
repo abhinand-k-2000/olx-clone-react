@@ -1,33 +1,47 @@
-import React from 'react'
-import {db} from '../firebase/config'
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase/config";
+import { collection, getDocs, addDoc, getDoc } from "firebase/firestore";
+import Card from "./Card";
+import Shimmer from "./Shimmer";
 
 const Posts = () => {
 
-const handleClick = async() =>{
-    const querySnapshot = await getDocs(collection(db, "prods"));
-    const fetchedPosts = liam.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    console.log(fetchedPosts)
-}
+    const [products, setProducts] = useState([])
 
-const addData = async () => {
-    const data = await addDoc(collection(db, "prod"), {
-        name: "Iphone 15 pro",
-        price: 150000
+  const fetchData = async() => {
+    const querySnapshot = await getDocs(collection(db, "products"))
+    const allPosts = querySnapshot.docs.map((product) => {
+        return {
+            ...product.data(),
+            id: product.id
+        }
     })
+    console.log("Posts", allPosts)
+    setProducts(allPosts)
+  }
 
-    console.log("doc written successfully", data)
-}
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  return (
+  return !products.length ? <Shimmer/> :(
     <div>
-        <h1 className='font-medium text-xl m-3 p-3'>Fresh Recomedations</h1>
-        <div className='container'>
-    <button onClick={handleClick}>CLick</button>
-    <button onClick={addData}>Add data</button>
-        </div>
-    </div>
-  )
-}
+      <h1 className="font-medium text-xl m-3 p-3">Fresh Recomedations</h1>
+      <div className="container grid grid-cols-4 gap-10">
 
-export default Posts
+        {
+            
+            products.map((prod) => {
+                return  <Card key={prod.id} data={prod}/>
+            })
+        }
+
+       
+       
+
+      </div>
+    </div>
+  );
+};
+
+export default Posts;

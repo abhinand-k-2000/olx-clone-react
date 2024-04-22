@@ -1,29 +1,22 @@
-import { createBrowserRouter, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, Route, RouterProvider } from "react-router-dom";
 
 import Home from "../pages/Home"
 import SignUP from "../pages/SignUp";
 import Login from "../pages/Login";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const Body = () => {
-  
-  const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Home />
-    },
-    {
-        path: '/signup',
-        element: <SignUP />
-    },
-    {
-      path: '/login',
-      element: <Login />
-    }
-]);
+
 
 
   return (
-    <RouterProvider router={router} />
+    <>
+    <Header />
+    <Outlet/>
+    <Footer/>
+    </>
+    
     )
 };
 
